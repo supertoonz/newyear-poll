@@ -243,7 +243,8 @@
   }).filter(function(d){return d.label});
   var API=String(C.scriptUrl||"").trim();
   var LIVE=/^https:\/\/script\.google\.com\//.test(API);
-  var NS="nyp:"+(C.pollId||"default")+":";
+  /* saved votes are kept per storage target, so a vote made in demo mode is never mistaken for a recorded one */
+  var NS="nyp:"+(C.pollId||"default")+":"+(LIVE?API.slice(-24,-5):"demo")+":";
 
   var my={name:"",place:null,other:"",date:null};
   var votes=[], dirty=false, hasVoted=false, saving=false;
