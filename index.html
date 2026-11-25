@@ -462,7 +462,9 @@
     setInterval(function(){if(!document.hidden)load(false)},20000);
     document.addEventListener("visibilitychange",function(){if(!document.hidden)load(false)});
   }else{
-    statusEl.textContent="โหมดตัวอย่าง: ยังไม่ได้ต่อ Google Sheet";
+    statusEl.textContent=API
+      ?"โหมดตัวอย่าง: scriptUrl ไม่ใช่ Web app URL ของ Apps Script (ต้องขึ้นต้นด้วย https://script.google.com/) โหวตยังไม่ถูกบันทึก"
+      :"โหมดตัวอย่าง: ยังไม่ได้ต่อ Google Sheet";
     $("setupLink").hidden=false;
   }
 })();
