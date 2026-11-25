@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตั้งค่าโพล</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0f2e;--card:#171c4a;--ink:#fff8e6;--muted:#c3bfe0;--line:rgba(255,255,255,.16);--gold:#f7c948;--green:#4be3a4;--red:#ff8a8a}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(120% 60% at 50% 0%,#2a1f6b,#0b0f2e 70%) fixed var(--bg);color:var(--ink);
+    font-family:"Kanit","Sarabun","Noto Sans Thai",system-ui,sans-serif;font-size:16px;line-height:1.55}
+  main{max-width:620px;margin:0 auto;padding:24px 16px 64px}
+  h1{font-size:28px;font-weight:900;margin:0;color:var(--gold)}
+  .lead{color:var(--muted);margin:4px 0 20px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 16px;margin-bottom:16px}
+  h2{font-size:19px;margin:0 0 4px;display:flex;gap:10px;align-items:center}
+  .step{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:15px;color:#141033;background:var(--gold)}
+  .hint{color:var(--muted);font-size:14px;margin:0 0 14px}
+  label{display:block;font-size:14px;color:var(--muted);margin:12px 0 4px}
+  input[type=text],input[type=url],input[type=datetime-local],textarea{width:100%;font:inherit;color:inherit;background:rgba(255,255,255,.06);
+    border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;min-height:46px}
+  input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #8fd3ff;outline-offset:2px}
+  input::placeholder{color:#8d89ad}
+  .item{display:grid;gap:8px;align-items:center;margin-bottom:8px}
+  .item.place{grid-template-columns:58px 1fr 44px}
+  .item.place .detail{grid-column:2 / 3}
+  .item.date{grid-template-columns:64px 80px 1fr 44px}
+  .item input{min-width:0}
+  .item .ico{text-align:center;padding-left:4px;padding-right:4px}
+  button{font:inherit;cursor:pointer;border-radius:12px;min-height:46px;border:1.5px solid var(--line);background:rgba(255,255,255,.06);color:inherit;padding:8px 14px}
+  button.del{padding:0;color:var(--red);font-size:20px}
+  .item.place button.del{grid-column:3;grid-row:1}
+  .item.date button.del{grid-column:4;grid-row:1}
+  button.add{width:100%;border-style:dashed;color:var(--gold)}
+  button.primary{background:var(--gold);color:#1c1238;border:0;font-weight:700;width:100%}
+  a.btn{display:block;text-align:center;text-decoration:none;font-weight:700;border-radius:12px;padding:12px 14px;
+    background:var(--green);color:#0d2a24;margin-top:10px}
+  a{color:#8fd3ff}
+  .check{display:flex;gap:10px;align-items:center;margin-top:12px;color:var(--ink);font-size:16px}
+  .check input{width:22px;height:22px}
+  ol{padding-left:22px;margin:0 0 12px}
+  ol li{margin-bottom:6px}
+  code{background:rgba(255,255,255,.1);border-radius:6px;padding:1px 6px;font-size:.92em}
+  textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;min-height:220px;white-space:pre;overflow:auto}
+  .msg{min-height:22px;font-size:14px;color:var(--green);margin:8px 0 0}
+  .warn{color:var(--gold);font-size:14px;margin:8px 0 0}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <h1>⚙️ ตั้งค่าโพล</h1>
+  <p class="lead">กรอกฟอร์มนี้ แล้วคัดลอกผลลัพธ์ไปวางใน <code>config.js</code> ไม่ต้องเขียนโค้ดเอง</p>
+
+  <section>
+    <h2><span class="step">1</span>รายละเอียดโพล</h2>
+    <p class="hint">ข้อความหัวเว็บ ร้าน และวันที่ให้เลือก</p>
+
+    <label for="f-title">ชื่อโพล</label>
+    <input type="text" id="f-title" maxlength="60">
+    <label for="f-sub">คำอธิบายใต้ชื่อ</label>
+    <input type="text" id="f-sub" maxlength="100">
+    <label for="f-big">ตัวอักษรสีทองตัวใหญ่ (เว้นว่างได้)</label>
+    <input type="text" id="f-big" maxlength="8" placeholder="เช่น 2027">
+    <label for="f-cd">นับถอยหลังถึงวันเวลา (เว้นว่างได้)</label>
+    <input type="datetime-local" id="f-cd">
+
+    <label>ร้านให้เลือก (ไอคอน · ชื่อร้าน · รายละเอียด)</label>
+    <div id="places"></div>
+    <button type="button" class="add" id="addPlace">+ เพิ่มร้าน</button>
+    <label class="check"><input type="checkbox" id="f-other"> มีตัวเลือก "ร้านอื่น" ให้พิมพ์ชื่อเอง</label>
+
+    <label style="margin-top:18px">วันให้เลือก (วันที่ · เดือน · ชื่อวัน)</label>
+    <div id="dates"></div>
+    <button type="button" class="add" id="addDate">+ เพิ่มวัน</button>
+  </section>
+
+  <section>
+    <h2><span class="step">2</span>ที่เก็บคะแนน (Google Sheet)</h2>
+    <p class="hint">ทำครั้งเดียว ประมาณ 3 นาที คะแนนจะอยู่ในชีตของคุณเอง</p>
+    <ol>
+      <li>เปิด <a href="https://sheets.new" target="_blank" rel="noopener">sheets.new</a> เพื่อสร้างชีตใหม่</li>
+      <li>เมนู <b>Extensions → Apps Script</b> แล้วลบโค้ดเดิมออกทั้งหมด</li>
+      <li>กดปุ่มด้านล่างเพื่อคัดลอกโค้ด แล้ววางลงไป</li>
+      <li><b>Deploy → New deployment</b> ประเภท <b>Web app</b><br>Execute as: <b>Me</b> · Who has access: <b>Anyone</b></li>
+      <li>กด Deploy อนุญาตสิทธิ์ แล้วคัดลอก <b>Web app URL</b> มาวางในช่องด้านล่าง</li>
+    </ol>
+    <button type="button" class="primary" id="copyCode">คัดลอกโค้ด Apps Script</button>
+    <p class="msg" id="codeMsg" role="status"></p>
+    <label for="f-url">Web app URL</label>
+    <input type="url" id="f-url" placeholder="https://script.google.com/macros/s/.../exec">
+    <p class="warn" id="urlWarn" hidden>URL ควรขึ้นต้นด้วย https://script.google.com/ และลงท้ายด้วย /exec</p>
+  </section>
+
+  <section>
+    <h2><span class="step">3</span>บันทึกลง config.js</h2>
+    <p class="hint">คัดลอกข้อความด้านล่าง เปิด <code>config.js</code> บน GitHub ลบของเดิมทั้งหมด วางแทน แล้วกด Commit changes</p>
+    <textarea id="out" readonly aria-label="เนื้อหา config.js"></textarea>
+    <button type="button" class="primary" id="copyCfg" style="margin-top:10px">คัดลอก config.js</button>
+    <p class="msg" id="cfgMsg" role="status"></p>
+    <a class="btn" id="editLink" target="_blank" rel="noopener" hidden>เปิด config.js บน GitHub เพื่อวาง</a>
+    <p class="hint" id="editHint" style="margin:10px 0 0">หลัง commit รอ 1–2 นาที แล้วเปิด <a href="./">หน้าโพล</a> อีกครั้ง</p>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script>
+(function(){
+  var C=window.POLL_CONFIG||{};
+  var $=function(id){return document.getElementById(id)};
+  function el(tag,attrs){var e=document.createElement(tag);for(var k in attrs)e[k]=attrs[k];return e}
+
+  function placeRow(p){
+    p=p||{};
+    var r=el("div",{className:"item place"});
+    var ico=el("input",{type:"text",className:"ico",maxLength:4,value:p.icon||"🍽️"});ico.setAttribute("aria-label","ไอคอน");
+    var name=el("input",{type:"text",className:"name",maxLength:60,placeholder:"ชื่อร้าน",value:p.name||""});name.setAttribute("aria-label","ชื่อร้าน");
+    var del=el("button",{type:"button",className:"del",textContent:"✕"});del.setAttribute("aria-label","ลบร้านนี้");
+    var detail=el("input",{type:"text",className:"detail",maxLength:80,placeholder:"ที่ตั้งหรือคำอธิบาย",value:p.detail||""});detail.setAttribute("aria-label","รายละเอียดร้าน");
+    del.addEventListener("click",function(){r.remove();render()});
+    r.appendChild(ico);r.appendChild(name);r.appendChild(del);r.appendChild(detail);
+    $("places").appendChild(r);
+  }
+  function dateRow(d){
+    d=d||{};
+    var r=el("div",{className:"item date"});
+    var day=el("input",{type:"text",className:"day",maxLength:4,placeholder:"24",value:d.day||""});day.setAttribute("aria-label","วันที่");
+    var mon=el("input",{type:"text",className:"mon",maxLength:10,placeholder:"ธ.ค.",value:d.month||""});mon.setAttribute("aria-label","เดือน");
+    var wd=el("input",{type:"text",className:"wd",maxLength:30,placeholder:"วันพฤหัสบดี",value:d.weekday||""});wd.setAttribute("aria-label","ชื่อวัน");
+    var del=el("button",{type:"button",className:"del",textContent:"✕"});del.setAttribute("aria-label","ลบวันนี้");
+    del.addEventListener("click",function(){r.remove();render()});
+    r.appendChild(day);r.appendChild(mon);r.appendChild(wd);r.appendChild(del);
+    $("dates").appendChild(r);
+  }
+
+  function toLocalInput(iso){
+    var t=Date.parse(iso);if(isNaN(t))return "";
+    var d=new Date(t-new Date(t).getTimezoneOffset()*60000);
+    return d.toISOString().slice(0,16);
+  }
+
+  function collect(){
+    var cfg={
+      title:$("f-title").value.trim()||"โหวตกินเลี้ยง",
+      subtitle:$("f-sub").value.trim(),
+      kicker:C.kicker||"",
+      bigText:$("f-big").value.trim()
+    };
+    var cd=$("f-cd").value;
+    if(cd&&!isNaN(Date.parse(cd))){
+      cfg.countdownTo=new Date(cd).toISOString();
+      cfg.countdownLabel=C.countdownLabel||"นับถอยหลัง";
+      cfg.countdownDone=C.countdownDone||"🎆 ถึงเวลาแล้ว! 🎆";
+    }
+    cfg.placeQuestion=C.placeQuestion||"ร้านไหนดี 🍽️";
+    cfg.places=[].map.call($("places").children,function(r){
+      return {icon:r.querySelector(".ico").value.trim()||"🍽️",name:r.querySelector(".name").value.trim(),detail:r.querySelector(".detail").value.trim()};
+    }).filter(function(p){return p.name});
+    cfg.allowOther=$("f-other").checked;
+    cfg.dateQuestion=C.dateQuestion||"สะดวกวันไหน 📅";
+    cfg.dates=[].map.call($("dates").children,function(r){
+      return {day:r.querySelector(".day").value.trim(),month:r.querySelector(".mon").value.trim(),weekday:r.querySelector(".wd").value.trim()};
+    }).filter(function(d){return d.day||d.month});
+    cfg.scriptUrl=$("f-url").value.trim();
+    cfg.pollId=pollId;
+    return cfg;
+  }
+
+  /* a fresh pollId whenever the options change, so old browser-saved votes do not carry over */
+  var pollId=C.pollId||"poll", baseKey=null;
+  function optionsKey(cfg){return JSON.stringify([cfg.places.map(function(p){return p.name}),cfg.dates,cfg.allowOther,cfg.scriptUrl])}
+
+  function render(){
+    var cfg=collect(),key=optionsKey(cfg);
+    if(baseKey===null)baseKey=key;
+    pollId=key===baseKey?(C.pollId||"poll"):("poll-"+Date.now().toString(36));
+    cfg.pollId=pollId;
+    $("out").value="// สร้างจากหน้า setup.html แก้ไขได้ที่หน้านั้น หรือแก้ไฟล์นี้ตรง ๆ\nwindow.POLL_CONFIG = "+JSON.stringify(cfg,null,2)+";\n";
+    var u=cfg.scriptUrl;
+    $("urlWarn").hidden=!u||/^https:\/\/script\.google\.com\/.+\/exec$/.test(u);
+  }
+
+  function copy(text,msgEl,okText){
+    function done(){msgEl.textContent=okText;setTimeout(function(){msgEl.textContent=""},4000)}
+    function fallback(){
+      var t=$("out"),old=t.value;t.value=text;t.focus();t.select();
+      var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+      t.value=old;
+      if(ok)done();else msgEl.textContent="คัดลอกอัตโนมัติไม่ได้ ให้เลือกข้อความแล้วคัดลอกเอง";
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,fallback);
+    else fallback();
+  }
+
+  /* prefill from the current config.js */
+  $("f-title").value=C.title||"";
+  $("f-sub").value=C.subtitle||"";
+  $("f-big").value=C.bigText||"";
+  $("f-cd").value=C.countdownTo?toLocalInput(C.countdownTo):"";
+  $("f-other").checked=C.allowOther!==false;
+  $("f-url").value=C.scriptUrl||"";
+  (C.places&&C.places.length?C.places:[{}]).forEach(placeRow);
+  (C.dates&&C.dates.length?C.dates:[{}]).forEach(dateRow);
+
+  document.querySelector("main").addEventListener("input",render);
+  $("addPlace").addEventListener("click",function(){placeRow();render();$("places").lastChild.querySelector(".name").focus()});
+  $("addDate").addEventListener("click",function(){dateRow();render();$("dates").lastChild.querySelector(".day").focus()});
+  $("copyCfg").addEventListener("click",function(){copy($("out").value,$("cfgMsg"),"คัดลอกแล้ว ✓ ไปวางใน config.js ได้เลย")});
+
+  /* Apps Script code is fetched up front so the copy happens right on the click */
+  var code="";
+  fetch("apps-script/Code.gs").then(function(r){return r.ok?r.text():""}).then(function(t){code=t},function(){});
+  $("copyCode").addEventListener("click",function(){
+    if(code)copy(code,$("codeMsg"),"คัดลอกโค้ดแล้ว ✓ ไปวางใน Apps Script ได้เลย");
+    else $("codeMsg").textContent="โหลดโค้ดไม่ได้ เปิดไฟล์ apps-script/Code.gs ใน repo แล้วคัดลอกเอง";
+  });
+
+  /* on GitHub Pages (owner.github.io/repo) link straight to the file editor */
+  var m=/^([a-z0-9-]+)\.github\.io$/i.exec(location.hostname),repo=location.pathname.split("/")[1];
+  if(m&&repo){
+    var a=$("editLink");a.href="https://github.com/"+m[1]+"/"+repo+"/edit/main/config.js";a.hidden=false;
+  }
+  render();
+})();
+</script>
+</body>
+</html>

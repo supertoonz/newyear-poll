@@ -164,6 +164,7 @@
   .reslabel{font-size:13px;font-weight:700;letter-spacing:.08em;margin:0 0 10px}
   .reslabel.p{color:#ffc531}.reslabel.d{color:#4be3a4}
   .foot{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
+  .foot a{color:var(--gold2);font-size:15px}
   [hidden]{display:none!important}
 
   @media (prefers-reduced-motion: reduce){
@@ -223,6 +224,7 @@
     <div id="resDates"></div>
   </section>
   <p class="foot">✨ แตะตรงไหนก็ได้เพื่อจุดพลุ ✨</p>
+  <p class="foot" id="setupLink" hidden><a href="setup.html">⚙️ ตั้งค่าโพลนี้ (ร้าน วันที่ และที่เก็บคะแนน)</a></p>
 </main>
 <canvas id="top" aria-hidden="true"></canvas>
 
@@ -460,7 +462,8 @@
     setInterval(function(){if(!document.hidden)load(false)},20000);
     document.addEventListener("visibilitychange",function(){if(!document.hidden)load(false)});
   }else{
-    statusEl.textContent="โหมดตัวอย่าง: ยังไม่ได้ต่อ Google Sheet ดูวิธีตั้งค่าใน README";
+    statusEl.textContent="โหมดตัวอย่าง: ยังไม่ได้ต่อ Google Sheet";
+    $("setupLink").hidden=false;
   }
 })();
 </script>
