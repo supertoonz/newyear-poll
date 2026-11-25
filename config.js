@@ -39,6 +39,6 @@ window.POLL_CONFIG = {
       "weekday": "วันศุกร์ 🎁"
     }
   ],
-  "scriptUrl": "https://docs.google.com/spreadsheets/d/1Lis2AyP7rJUUlu3neMWnhozoWO91GfGUDXGdsOBdjgk/edit?gid=539675338#gid=539675338",
+  "scriptUrl": "https://script.google.com/macros/s/AKfycbw81uXH1wBq6eZUVGHJVLffaA6lunoZcQ7DHYVC4uK9Mib4ADZm1nS37I3hpmyRrdPC/exec",
   "pollId": "poll-mwvsbfa9"
 };
